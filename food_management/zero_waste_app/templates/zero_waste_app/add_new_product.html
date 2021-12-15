@@ -1,0 +1,12 @@
+{% extends "zero_waste_app/base_generic.html" %}
+
+{% block  content %}
+    <h2>Add product</h2>
+    <form action="" method="post">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}

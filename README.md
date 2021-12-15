@@ -1,1 +1,0 @@
-# zero_waste_app

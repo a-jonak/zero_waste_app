@@ -1,0 +1,35 @@
+{% extends "zero_waste_app/base_generic.html" %}
+
+<!-- {% block style %}
+<style>
+    td, th {
+        border: 1px solid #e2e2e2;
+        text-align: left;
+        padding: 10px;
+    }
+
+    tr:nth-child {
+        background-color: #c4c1c1fd;
+    }
+</style>
+{% endblock %} -->
+
+{% block content %}
+    <h2>Product List</h2>
+    <table>
+        <tr>
+            <th>Produkt</th>
+            <th>Ilość</th>
+            <th>Data ważności</th>
+        </tr>
+        {% for item in productinstance_list %}
+        <tr>
+            <th>{{ item.product }}</th>
+            <th>{{ item.number }}</th>
+            <th class="{% if item.has_short_expiration_date %}text-danger{% endif %}">{{ item.expiration_date }}</th>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <p><a href="{% url 'add_new_product' %}">Add new product</a></p>
+{% endblock %}
