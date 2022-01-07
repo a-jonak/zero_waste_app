@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from django.db import models
 from datetime import date, timedelta
 
+from django.db.models.deletion import CASCADE
+
 
 # class User(models.Model):
 #     name = models.CharField(max_length=50, help_text='Enter your desired user name')
@@ -32,7 +34,7 @@ class ProductInstance(models.Model):
 
 class Recipe(models.Model):
     name = models.CharField(max_length=100)
-    ingredients = models.TextField()
+    # ingredients = models.TextField()
     instructions = models.TextField()
 
     class Meta:
@@ -40,3 +42,17 @@ class Recipe(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+
+class Product(models.Model):
+    name = models.CharField(max_length=120)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class RecipeIngredient(models.Model):
+    recipe = models.ForeignKey(Recipe, on_delete=CASCADE)
+    ingredient = models.ForeignKey(Product, on_delete=CASCADE)
+    amount = models.FloatField()
+    unit = models.TextField(default=0)

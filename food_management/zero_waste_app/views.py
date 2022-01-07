@@ -12,7 +12,7 @@ from django.utils import timezone
 from django.views import generic
 
 from .forms import AddProductForm, AddUserForm
-from .models import ProductInstance, Recipe
+from .models import Product, ProductInstance, Recipe, RecipeIngredient
 
 
 class IndexView(generic.TemplateView):
@@ -31,10 +31,12 @@ class ProductListView(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         return ProductInstance.objects.filter(user=self.request.user)
 
+
 @login_required
 def recipe(request, recipe_id):
     r = get_object_or_404(Recipe, pk=recipe_id)
-    ingredients_list = [ingredient for ingredient in r.ingredients.split('\n')]
+    ingredients = RecipeIngredient.objects.filter(recipe=recipe_id)
+    ingredients_list = [product for product in ingredients]
     return render(request, 'zero_waste_app/recipe.html', {
         'name': r.name,
         'ingredients_list': ingredients_list,
@@ -56,7 +58,7 @@ def recipe(request, recipe_id):
 class RecipesView(LoginRequiredMixin, generic.ListView):
     model = Recipe
     template_name = 'zero_waste_app/recipes.html'
-    paginate_by = 10
+    paginate_by = 20
 
 
 def add_new_product(request):

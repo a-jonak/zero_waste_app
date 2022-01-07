@@ -1,11 +1,17 @@
 {% extends "zero_waste_app/base_generic.html" %}
-
+{% block style %}
+<style>
+    ul {
+        display: block;
+    }
+</style>
+{% endblock %}
 {% block content %}
 <h2>{{ name }}</h2>
 <h3>Składniki: </h3>
 <ul>
-    {% for ingredient in ingredients_list %}
-    <li>{{ ingredient }}</li>
+    {% for product in ingredients_list %}
+    <li>{{ product.ingredient.name }} ilość: {{ product.amount }} {{ product.unit }}</li>
     {% endfor %}
 </ul>
 <h3>Przepis: </h3>

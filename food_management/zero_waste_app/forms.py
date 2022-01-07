@@ -7,8 +7,8 @@ from django.core.exceptions import ValidationError
 
 class AddProductForm(forms.Form):
     product_name = forms.CharField(help_text='Enter product name')
-    number = forms.IntegerField(initial=1)
-    expiration_date = forms.DateField(help_text='Enter product expiration date')
+    number = forms.IntegerField(initial=1, widget=forms.NumberInput())
+    expiration_date = forms.DateField(help_text='Enter product expiration date',  widget=forms.SelectDateWidget())
 
     def clean_expiration_date(self):
         data = self.cleaned_data['expiration_date']
