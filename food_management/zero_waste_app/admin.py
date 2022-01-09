@@ -1,13 +1,16 @@
 from django.contrib import admin
 
-from .models import Product, ProductInstance, Recipe, RecipeIngredient
+from .models import Product, UserProduct, Recipe, RecipeIngredient
 
 
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
 
 
-class ProductInstanceAdmin(admin.ModelAdmin):
+# class ProductInstanceAdmin(admin.ModelAdmin):
+#     list_display = ('product', 'expiration_date', 'number', 'user')
+#     list_filter = ('expiration_date', 'user')
+class UserProductAdmin(admin.ModelAdmin):
     list_display = ('product', 'expiration_date', 'number', 'user')
     list_filter = ('expiration_date', 'user')
 
@@ -22,6 +25,6 @@ class RecipeIngredientAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Recipe, RecipeAdmin)
-admin.site.register(ProductInstance, ProductInstanceAdmin)
+admin.site.register(UserProduct, UserProductAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(RecipeIngredient, RecipeIngredientAdmin)

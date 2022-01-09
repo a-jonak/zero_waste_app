@@ -22,9 +22,9 @@
             <th>Ilość</th>
             <th>Data ważności</th>
         </tr>
-        {% for item in productinstance_list %}
+        {% for item in userproduct_list %}
         <tr>
-            <th>{{ item.product }}</th>
+            <th>{{ item.product.name }}</th>
             <th>{{ item.number }}</th>
             <th class="{% if item.has_short_expiration_date %}text-danger{% endif %}">{{ item.expiration_date }}</th>
         </tr>
@@ -32,4 +32,8 @@
     </table>
     <br>
     <p><a href="{% url 'add_new_product' %}">Add new product</a></p>
+    <br>
+    {% for mached_recipe in mached_recipes %}
+        <p><a href="{% url 'recipe' mached_recipe.id %}">{{ mached_recipe.name }}</a></p>
+    {% endfor %}
 {% endblock %}

@@ -1,4 +1,5 @@
 from datetime import date, datetime
+from typing import Counter
 from django.contrib.auth.models import Group, User
 from django.db import reset_queries
 from django.http import Http404, HttpResponse, HttpResponseRedirect
@@ -12,7 +13,7 @@ from django.utils import timezone
 from django.views import generic
 
 from .forms import AddProductForm, AddUserForm
-from .models import Product, ProductInstance, Recipe, RecipeIngredient
+from .models import Product, Recipe, RecipeIngredient, UserProduct
 
 
 class IndexView(generic.TemplateView):
@@ -24,12 +25,31 @@ class IndexView(generic.TemplateView):
 #     products = ProductInstance.objects.filter(user=user_id)
 #     # return HttpResponse("You're looking at product list of: {}".format(user_id))
 #     return render(request, 'zero_waste_app/product_list.html', { 'product_list': products })
-class ProductListView(LoginRequiredMixin, generic.ListView):
-    model = ProductInstance
-    template_name = 'zero_waste_app/product_list.html'
+# class ProductListView(LoginRequiredMixin, generic.ListView):
+#     model = ProductInstance
+#     template_name = 'zero_waste_app/product_list.html'
 
-    def get_queryset(self):
-        return ProductInstance.objects.filter(user=self.request.user)
+#     def get_queryset(self):
+#         return ProductInstance.objects.filter(user=self.request.user)
+# class ProductListView(LoginRequiredMixin, generic.ListView):
+#     model = UserProduct
+#     template_name = 'zero_waste_app/product_list.html'
+#     context['recipes'] = recipes_per_user_products()
+
+#     def get_queryset(self):
+#         return UserProduct.objects.filter(user=self.request.user)
+    
+#     def recipes_per_user_products(self):
+#         user_products = UserProduct.objects.filter(user=self.request.user)
+#         recipes_matching_user_products = RecipeIngredient.objects.filter(ingredient__in=user_products)
+#         recipes_with_most_nr_of_product_match = Counter(recipes_matching_user_products).keys()[:3]
+#         return recipes_with_most_nr_of_product_match
+
+@login_required
+def product_list(request):
+    userproduct_list = UserProduct.objects.filter(user=request.user)
+    recipes = recipes_per_user_products(userproduct_list)
+    return render(request, 'zero_waste_app/product_list.html', {'userproduct_list': userproduct_list, 'mached_recipes': recipes})
 
 
 @login_required
@@ -65,12 +85,24 @@ def add_new_product(request):
     if request.method == 'POST':
         form = AddProductForm(request.POST)
         if form.is_valid():
-            product_instance = ProductInstance()
-            product_instance.user = request.user
-            product_instance.product = form.cleaned_data['product_name']
-            product_instance.number = form.cleaned_data['number']
-            product_instance.expiration_date = form.cleaned_data['expiration_date']
-            product_instance.save()
+            try:
+                product_in_database = Product.objects.get(name=form.cleaned_data['product_name'])
+                product_instance = UserProduct()
+                product_instance.user = request.user
+                product_instance.product = product_in_database
+                product_instance.number = form.cleaned_data['number']
+                product_instance.expiration_date = form.cleaned_data['expiration_date']
+                product_instance.save()
+            except:
+                product = Product()
+                product.name = form.cleaned_data['product_name']
+                product.save()
+                product_instance = UserProduct()
+                product_instance.user = request.user
+                product_instance.product = product
+                product_instance.number = form.cleaned_data['number']
+                product_instance.expiration_date = form.cleaned_data['expiration_date']
+                product_instance.save()
 
             return HttpResponseRedirect(reverse('product_list'))
     else:
@@ -102,3 +134,12 @@ def add_new_user(request):
     else:
         form = AddUserForm()
     return render(request, 'zero_waste_app/add_new_user.html', {'form': form})
+
+
+def recipes_per_user_products(user_products):
+    # user_products = UserProduct.objects.filter(user=user)
+    wanted_products = [user_pr.product for user_pr in user_products]
+    recipes_matching_user_products = RecipeIngredient.objects.filter(ingredient__in=wanted_products)
+    recipes_with_most_nr_of_product_match = Counter([product.recipe for product in recipes_matching_user_products])
+    # print(recipes_with_most_nr_of_product_match)
+    return [recipe[0] for recipe in sorted(recipes_with_most_nr_of_product_match.items(), key=lambda x: x[1], reverse=True)][:3]
