@@ -1,59 +1,69 @@
 {% extends "zero_waste_app/base_generic.html" %}
 
-<!-- {% block style %}
-<style>
-    td, th {
-        border: 1px solid #e2e2e2;
-        text-align: left;
-        padding: 10px;
-    }
-
-    tr:nth-child {
-        background-color: #c4c1c1fd;
-    }
-</style>
-{% endblock %} -->
-
 {% block content %}
     <h2>Product List</h2>
     <table>
         <tr>
             <th>Produkt</th>
             <th>Ilość</th>
+            <th></th>
+            <th></th>
             <th>Data ważności</th>
         </tr>
         {% for item in userproduct_list %}
         <tr>
-            <th>{{ item.product.name }}</th>
-            <th>{{ item.number }}</th>
-            <th class="{% if item.has_short_expiration_date %}text-danger{% endif %}">{{ item.expiration_date }}</th>
-            <th><form action="{% url 'add_user_product' item.id %}" method="get">
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.number }}</td>
+            <td>
+                <form action="{% url 'add_user_product' item.id %}" method="get">
                 {% csrf_token %}
-                <button name='add-product-button' type='submit' value='1'>+</button>
-            </form>
-            </th>
-            <th><form action="{% url 'sub_user_product' item.id %}" method="get">
+                    <button name='add-product-button' type='submit' value='1'>+</button>
+                </form>
+                <form action="{% url 'sub_user_product' item.id %}" method="get">
                 {% csrf_token %}
-                <button name='sub-product-button' type='submit' value='1'>-</button>
-            </form>
-            </th>
-            <th><form action="{% url 'delete_user_product' item.id %}" method="get">
+                    <button name='sub-product-button' type='submit' value='1'>–</button>
+                </form>
+            </td>
+            <td></td>
+            {% if item.has_short_expiration_date %}
+            <td><p id="warning">{{ item.expiration_date }}</p></td>
+            {% else %}
+            {% if item.after_expiration_date %}
+            <td><p id="danger">{{ item.expiration_date }}</p></td>
+            {% else %}
+            <td >{{ item.expiration_date }}</td>
+            {% endif %}
+            {% endif %}
+            <td>
+                <form action="{% url 'delete_user_product' item.id %}" method="get">
                 {% csrf_token %}
-                <button name='delete-product-button' type='submit' value='0'>usuń</button>
-            </form>
-            </th>
-            <th><form action="{% url 'change_user_product' item.id %}" method="get">
+                    <button name='delete-product-button' type='submit' value='0'>usuń</button>
+                </form>
+            </td>
+            <td>
+                <form action="{% url 'change_user_product' item.id %}" method="get">
                 {% csrf_token %}
-                <button name='change-product-button' type='submit' value='change'>edytuj</button>
-            </form>
-            </th>
+                    <button name='change-product-button' type='submit' value='change'>edytuj</button>
+                </form>
+            </td>
+            <td>
+                <form action="{% url 'add_product_to_shopping_list' item.id %}" method="get">
+                {% csrf_token %}
+                    <button name='shopping-list-button' type='submit' value='change'>dodaj do listy zakupów</button>
+                </form>
+            </td>
         </tr>
         {% endfor %}
     </table>
-    <button><a href="{% url 'add_new_user_product' %}">Add new product</a></button>
     <br>
-    <br>
-    {% for mached_recipe in mached_recipes %}
-        <p><a href="{% url 'recipe' mached_recipe.id %}">{{ mached_recipe.name }}</a></p>
-    {% endfor %}
+    <button><a href="{% url 'add_new_user_product' %}">Dodaj produkt</a></button>
+
+    <br><br><br>
+    <p>Niektóre z posiadanych produktów są wykorzystywane w poniższych przepisach. Może coś Ci wpadnie w oko.</p>
+    <ul>
+        {% for mached_recipe in mached_recipes %}
+        <li><a href="{% url 'recipe' mached_recipe.id %}">{{ mached_recipe.name }}</a></li>
+        {% endfor %}
+    </ul>
+
 {% endblock %}

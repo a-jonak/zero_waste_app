@@ -6,9 +6,9 @@ from django.core.exceptions import ValidationError
 
 
 class AddUserProductForm(forms.Form):
-    product_name = forms.CharField(help_text='Nazwa produktu')
-    number = forms.IntegerField(initial=1, widget=forms.NumberInput())
-    expiration_date = forms.DateField(help_text='Data ważności',  widget=forms.SelectDateWidget())
+    product_name = forms.CharField(label='Nazwa produktu')
+    number = forms.IntegerField(label='Ilość',initial=1, widget=forms.NumberInput())
+    expiration_date = forms.DateField(label='Data ważności',  widget=forms.SelectDateWidget())
 
     def clean_expiration_date(self):
         data = self.cleaned_data['expiration_date']
@@ -18,9 +18,9 @@ class AddUserProductForm(forms.Form):
 
 
 class AddUserForm(forms.Form):
-    user_name = forms.CharField(help_text='Wprowadź nazwę użytkownika')
-    email = forms.EmailField(help_text='Wprowadź adres email')
-    password = forms.CharField(help_text='Wprowadź hasło', widget=forms.PasswordInput())
+    user_name = forms.CharField(label='Nazwa użytkownika', help_text='Wprowadź nazwę użytkownika')
+    email = forms.EmailField(label='Adres email', help_text='Wprowadź adres email')
+    password = forms.CharField(label='Hasło', help_text='Wprowadź hasło', widget=forms.PasswordInput())
 
     def clean_password(self):
         data = self.cleaned_data['password']
@@ -30,8 +30,8 @@ class AddUserForm(forms.Form):
 
 class ChangeUserProductForm(forms.Form):
     product_name = ''
-    number = forms.IntegerField(widget=forms.NumberInput())
-    expiration_date = forms.DateField(widget=forms.SelectDateWidget())
+    number = forms.IntegerField(label='Ilość', widget=forms.NumberInput())
+    expiration_date = forms.DateField(label='Data ważności', widget=forms.SelectDateWidget())
 
     def clean_expiration_date(self):
         data = self.cleaned_data['expiration_date']
@@ -41,5 +41,5 @@ class ChangeUserProductForm(forms.Form):
 
 
 class AddShoppingProductForm(forms.Form):
-    product_name = forms.CharField(help_text='Nazwa produktu')
-    amount = forms.IntegerField(initial=1, widget=forms.NumberInput())
+    product_name = forms.CharField(label='Nazwa produktu')
+    amount = forms.IntegerField(label='Ilość', initial=1, widget=forms.NumberInput())

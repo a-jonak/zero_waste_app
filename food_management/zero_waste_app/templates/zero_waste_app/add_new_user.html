@@ -1,13 +1,15 @@
 {% extends "zero_waste_app/base_generic.html" %}
 
 {% block  content %}
-    <h2>Create account</h2>
+    <h2>Stwórz konto</h2>
     <form action="" method="post">
         {% csrf_token %}
         <table>
             {{ form.as_table }}
         </table>
-        <input type="submit" value="Submit">
+        <br>
+        <input type="submit" value="Potwierdź">
     </form>
-    <p><a href="{% url 'login' %}">Already have an account?</a></p>
+    <br>
+    <p><a href="{% url 'login' %}">Masz już konto?</a></p>
 {% endblock %}

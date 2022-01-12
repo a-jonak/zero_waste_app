@@ -39,7 +39,11 @@ class UserProduct(models.Model):
 
     @property
     def has_short_expiration_date(self):
-        return self.expiration_date - date.today() < timedelta(days=3)
+        return timedelta(days=0) <= self.expiration_date - date.today() < timedelta(days=3)
+
+    @property
+    def after_expiration_date(self):
+        return self.expiration_date - date.today() < timedelta(days=0)
 
     class Meta:
         permissions = (('can_add_new_product', 'Add new product'),

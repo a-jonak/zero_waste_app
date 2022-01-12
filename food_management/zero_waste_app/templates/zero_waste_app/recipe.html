@@ -1,19 +1,27 @@
 {% extends "zero_waste_app/base_generic.html" %}
-{% block style %}
-<style>
-    ul {
-        display: block;
-    }
-</style>
-{% endblock %}
+
 {% block content %}
 <h2>{{ name }}</h2>
-<h3>Składniki: </h3>
-<ul>
+<h4>Składniki: </h4>
+<table>
+    <tr>
+        <th>Produkt</th>
+        <th>Ilość</th>
+    </tr>
     {% for product in ingredients_list %}
-    <li>{{ product.ingredient.name }} ilość: {{ product.amount }} {{ product.unit }}</li>
+    <tr>
+        <td>{{ product.ingredient.name }}</td>
+        <td>{{ product.amount }} {{ product.unit }}</td>
+        <td>
+            <form action="{% url 'add_ingredient_to_shopping_list' product.id %}" method="get">
+            {% csrf_token %}
+                <button type='submit'>dodaj do listy zakupów</button>
+            </form>
+        </td>
+    </tr>
     {% endfor %}
-</ul>
-<h3>Przepis: </h3>
-<h4>{{ instruction }}</h4>
+</table>
+<br>
+<h4>Przepis: </h4>
+<p>{{ instruction }}</p>
 {% endblock %}

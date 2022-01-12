@@ -1,6 +1,17 @@
 {% extends "zero_waste_app/base_generic.html" %}
 
 {% block content %}
-    <h1>Zero Waste App Home</h1>
-    <p>Hello in Zero Waste App! It's still in progres.</p>
+    <h3>Witaj w aplikacji do zarządzania żywnością w gospodarstwie domowym</h3>
+    <br>
+    <p>Możesz kontrolować posiadane produkty i ich daty ważności za pomocą swojej: <a href="product_list">listy produktów</a></p>
+    <p>Gdy coś się skończy albo potrzebujesz czegoś do przepisu, dodaj to do: <a href="shopping_list">listy zakupów</a></p>
+    <p>W poszukiwaniu inspiracji co dobrego zjeść tym razem zawsze możesz przejrzeć: <a href="recipes">dostępne przepisy</a></p>
+    <p>Z przepisów może zainteresują cię na przykład:</p>
+    <ul>
+        {% for recipe in example_recipes %}
+        <li><a href="{% url 'recipe' recipe.id %}">{{ recipe.name }}</a></li>
+        {% endfor %}
+    </ul>
+
+
 {% endblock %}

@@ -25,3 +25,15 @@ def create_new_shopping_product(user, form, product):
     product_instance.product = product
     product_instance.amount = form.cleaned_data['amount']
     product_instance.save()
+
+
+def add_to_shopping_list(request, product):
+    try:
+        product_in_sp = UserShoppingList.objects.get(product=product, user=request.user)
+        product_in_sp.amount += 1
+        product_in_sp.save()
+    except:
+        new_product_in_sp = UserShoppingList()
+        new_product_in_sp.user = request.user
+        new_product_in_sp.product = product
+        new_product_in_sp.save()
