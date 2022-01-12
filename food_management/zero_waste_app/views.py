@@ -1,25 +1,16 @@
-from datetime import date, datetime
-from typing import Counter
+from datetime import date
 import random
-from django.contrib.auth.models import Group, User
-from django.db import reset_queries
-from django.http import Http404, HttpResponse, HttpResponseRedirect
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.template import loader
+from django.contrib.auth.models import Group, User
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
-from django.utils import timezone
 from django.views import generic
 
-from .forms import AddUserForm, AddShoppingProductForm, AddUserProductForm, ChangeUserProductForm
+from .forms import AddShoppingProductForm, AddUserForm, AddUserProductForm, ChangeUserProductForm
 from .models import Product, Recipe, RecipeIngredient, UserProduct, UserShoppingList
 from .scripts import add_to_shopping_list, create_new_shopping_product, create_new_user_product, recipes_per_user_products
 
-
-# class IndexView(generic.TemplateView):
-#     template_name = 'zero_waste_app/index.html'
 
 def index(request):
     recipes = Recipe.objects.all()
@@ -27,31 +18,6 @@ def index(request):
     example_recipes = Recipe.objects.filter(pk__in=random_indexes)
     return render(request, 'zero_waste_app/index.html', {'example_recipes': example_recipes})
 
-
-# @login_required
-# def product_list(request, user_id):
-#     products = ProductInstance.objects.filter(user=user_id)
-#     # return HttpResponse("You're looking at product list of: {}".format(user_id))
-#     return render(request, 'zero_waste_app/product_list.html', { 'product_list': products })
-# class ProductListView(LoginRequiredMixin, generic.ListView):
-#     model = ProductInstance
-#     template_name = 'zero_waste_app/product_list.html'
-
-#     def get_queryset(self):
-#         return ProductInstance.objects.filter(user=self.request.user)
-# class ProductListView(LoginRequiredMixin, generic.ListView):
-#     model = UserProduct
-#     template_name = 'zero_waste_app/product_list.html'
-#     context['recipes'] = recipes_per_user_products()
-
-#     def get_queryset(self):
-#         return UserProduct.objects.filter(user=self.request.user)
-    
-#     def recipes_per_user_products(self):
-#         user_products = UserProduct.objects.filter(user=self.request.user)
-#         recipes_matching_user_products = RecipeIngredient.objects.filter(ingredient__in=user_products)
-#         recipes_with_most_nr_of_product_match = Counter(recipes_matching_user_products).keys()[:3]
-#         return recipes_with_most_nr_of_product_match
 
 @login_required
 def product_list(request):
@@ -64,7 +30,6 @@ def product_list(request):
 def recipe(request, recipe_id):
     r = get_object_or_404(Recipe, pk=recipe_id)
     ingredients = RecipeIngredient.objects.filter(recipe=recipe_id)
-    # ingredients_list = [product for product in ingredients]
     return render(request, 'zero_waste_app/recipe.html', {
         'name': r.name,
         'ingredients_list': ingredients,
@@ -77,17 +42,7 @@ def shopping_list(request):
     shopping_list = UserShoppingList.objects.filter(user=request.user)
     return render(request, 'zero_waste_app/shopping_list.html', {'shopping_list': shopping_list})
 
-# class RecipeView(generic.DetailView):
-#     model = Recipe
-#     ingredient_list = [ing for ing in Recipe.ingredients.split('\n')]
-#     # context_object_name = 'ingredients_list'
-#     template_name = 'zero_waste_app/recipe.html'
-    # def get_queryset(self):
-    #     return [ingredient for ingredient in Recipe.ingredients.split('\n')]
 
-# def recipes(request):
-#     recipes_list = Recipe.objects.all
-#     return render(request, 'zero_waste_app/recipes.html', { 'recipes_list': recipes_list })
 class RecipesView(LoginRequiredMixin, generic.ListView):
     model = Recipe
     template_name = 'zero_waste_app/recipes.html'

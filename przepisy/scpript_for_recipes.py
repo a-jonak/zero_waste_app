@@ -53,7 +53,6 @@ def parse_ingredient(ingredient):
     except:
         return [ingredient]
 
-# print(parse_ingredient('śliwki węgierki – 9 szt.'))
 
 def get_links(line):
     links = []

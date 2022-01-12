@@ -14,4 +14,3 @@ cur.execute(select_recipe_product)
 recipes = [obj[0] for obj in cur.fetchall()]
 
 print(Counter(recipes))
-# print(', '.join(products_id))

@@ -7,9 +7,6 @@ class RecipeAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
 
 
-# class ProductInstanceAdmin(admin.ModelAdmin):
-#     list_display = ('product', 'expiration_date', 'number', 'user')
-#     list_filter = ('expiration_date', 'user')
 class UserProductAdmin(admin.ModelAdmin):
     list_display = ('product', 'expiration_date', 'number', 'user')
     list_filter = ('expiration_date', 'user')

@@ -1,12 +1,11 @@
 from typing import Counter
-from .models import Product, Recipe, RecipeIngredient, UserShoppingList, UserProduct
+
+from .models import RecipeIngredient, UserProduct, UserShoppingList
 
 def recipes_per_user_products(user_products):
-    # user_products = UserProduct.objects.filter(user=user)
     wanted_products = [user_pr.product for user_pr in user_products]
     recipes_matching_user_products = RecipeIngredient.objects.filter(ingredient__in=wanted_products)
     recipes_with_most_nr_of_product_match = Counter([product.recipe for product in recipes_matching_user_products])
-    # print(recipes_with_most_nr_of_product_match)
     return [recipe[0] for recipe in sorted(recipes_with_most_nr_of_product_match.items(), key=lambda x: x[1], reverse=True)][:3]
 
 

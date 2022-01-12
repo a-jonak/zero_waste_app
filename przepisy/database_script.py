@@ -30,15 +30,18 @@ recipe = {
 
 
 # get_ingredients_and_quantity(ing)
-name, ingredients, instructions = get_recipe_information(open_page('https://kuchnialidla.pl/korzenny-pudding-ryzowy'))
-# ingredients.pop('sól')
-ingredients.pop('mleko lub napój sojowy')
-ingredients.pop('brązowy ryż')
-# ingredients.pop("mleko 2% lub 3,2%")
-ingredients['mleko'] = {'amount': '600', 'unit': 'ml'}
-ingredients['ryż'] = {'amount': '100', 'unit': 'g'}
-# # ingredients['sól'] = {'amount': '1', 'unit': 'szczypta'}
-# ingredients['masło klarowane'] = {'amount': '1', 'unit': 'łyżka'}
+name, ingredients, instructions = get_recipe_information(open_page('https://kuchnialidla.pl/tortille-z-lososiem-wedzonym'))
+# ingredients.pop('bułka tarta')
+ingredients.pop('sól')
+ingredients.pop('pieprz')
+# ingredients.pop('sok z cytryny')
+# ingredients.pop('sok wyciśnięty z ½ cytryny')
+# ingredients.pop('świeże zioła (np. natka pietruszki, szczypiorek, rukiew wodna)')
+# ingredients.pop('oliwa z oliwek')
+ingredients['sól'] = {'amount': '1', 'unit': 'szczypta'}
+ingredients['pieprz'] = {'amount': '1', 'unit': 'szczypta'}
+# ingredients['ziemniaki'] = {'amount': '1', 'unit': 'kg'}
+# ingredients['oliwa z oliwek'] = {'amount': '1', 'unit': 'łyżka'}
 for ing in ingredients:
     # print(ing)
     ingredients[ing]['amount'] = parse_problematic_numbers(ingredients[ing]['amount'])

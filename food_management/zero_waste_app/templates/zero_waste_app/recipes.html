@@ -1,7 +1,7 @@
 {% extends "zero_waste_app/base_generic.html" %}
 
 {% block content %}
-<h2>Recipes List</h2>
+<h2>Lista przepisów</h2>
 <ul>
     {% for recipe in recipe_list %}
     <li><strong><a href="{% url 'recipe' recipe.id %}">{{ recipe.name }}</a></strong></li>
