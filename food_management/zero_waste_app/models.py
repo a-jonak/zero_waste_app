@@ -5,13 +5,6 @@ from datetime import date, timedelta
 from django.db.models.deletion import CASCADE
 
 
-# class User(models.Model):
-#     name = models.CharField(max_length=50, help_text='Enter your desired user name')
-#     password = models.CharField(max_length=50, help_text='Enter password')
-        
-#     def __str__(self) -> str:
-#         return self.name
-
 class Product(models.Model):
     name = models.CharField(max_length=120)
 
@@ -53,13 +46,9 @@ class UserProduct(models.Model):
                        ('can_add_existing_product', 'Add product'),
                        ('can_delete_product', 'Delete product'),)
 
-    # def __str__(self) -> str:
-    #     return self.product
-
 
 class Recipe(models.Model):
     name = models.CharField(max_length=100)
-    # ingredients = models.TextField()
     instructions = models.TextField()
 
     class Meta:
@@ -74,3 +63,9 @@ class RecipeIngredient(models.Model):
     ingredient = models.ForeignKey(Product, on_delete=CASCADE)
     amount = models.FloatField()
     unit = models.TextField(default=0)
+
+
+class UserShoppingList(models.Model):
+    user = models.ForeignKey(User, on_delete=CASCADE)
+    product = models.ForeignKey(Product, on_delete=CASCADE)
+    amount = models.IntegerField(default=1)

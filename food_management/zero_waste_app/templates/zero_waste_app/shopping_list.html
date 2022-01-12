@@ -15,45 +15,36 @@
 {% endblock %} -->
 
 {% block content %}
-    <h2>Product List</h2>
+    <h2>Lista zakupów</h2>
     <table>
-        <tr>
-            <th>Produkt</th>
-            <th>Ilość</th>
-            <th>Data ważności</th>
-        </tr>
-        {% for item in userproduct_list %}
+        {% for item in shopping_list %}
         <tr>
             <th>{{ item.product.name }}</th>
-            <th>{{ item.number }}</th>
-            <th class="{% if item.has_short_expiration_date %}text-danger{% endif %}">{{ item.expiration_date }}</th>
-            <th><form action="{% url 'add_user_product' item.id %}" method="get">
+            <th>{{ item.amount }}</th>
+            <th><form action="{% url 'add_shopping_product' item.id %}" method="get">
                 {% csrf_token %}
                 <button name='add-product-button' type='submit' value='1'>+</button>
             </form>
             </th>
-            <th><form action="{% url 'sub_user_product' item.id %}" method="get">
+            <th><form action="{% url 'sub_shopping_product' item.id %}" method="get">
                 {% csrf_token %}
                 <button name='sub-product-button' type='submit' value='1'>-</button>
             </form>
             </th>
-            <th><form action="{% url 'delete_user_product' item.id %}" method="get">
+            <th><form action="{% url 'delete_shopping_product' item.id %}" method="get">
                 {% csrf_token %}
                 <button name='delete-product-button' type='submit' value='0'>usuń</button>
             </form>
             </th>
-            <th><form action="{% url 'change_user_product' item.id %}" method="get">
+            <!-- <th><form action="{% url 'change_user_product' item.id %}" method="get">
                 {% csrf_token %}
                 <button name='change-product-button' type='submit' value='change'>edytuj</button>
             </form>
             </th>
-        </tr>
+        </tr> -->
         {% endfor %}
     </table>
-    <button><a href="{% url 'add_new_user_product' %}">Add new product</a></button>
     <br>
+    <button><a href="{% url 'add_new_shopping_product' %}">Dodaj nowy produkt</a></button>
     <br>
-    {% for mached_recipe in mached_recipes %}
-        <p><a href="{% url 'recipe' mached_recipe.id %}">{{ mached_recipe.name }}</a></p>
-    {% endfor %}
 {% endblock %}

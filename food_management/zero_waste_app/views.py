@@ -12,8 +12,9 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views import generic
 
-from .forms import AddProductForm, AddUserForm
-from .models import Product, Recipe, RecipeIngredient, UserProduct
+from .forms import AddUserForm, AddShoppingProductForm, AddUserProductForm, ChangeUserProductForm
+from .models import Product, Recipe, RecipeIngredient, UserProduct, UserShoppingList
+from .scripts import create_new_shopping_product, create_new_user_product, recipes_per_user_products
 
 
 class IndexView(generic.TemplateView):
@@ -64,6 +65,11 @@ def recipe(request, recipe_id):
     })
 
 
+@login_required
+def shopping_list(request):
+    shopping_list = UserShoppingList.objects.filter(user=request.user)
+    return render(request, 'zero_waste_app/shopping_list.html', {'shopping_list': shopping_list})
+
 # class RecipeView(generic.DetailView):
 #     model = Recipe
 #     ingredient_list = [ing for ing in Recipe.ingredients.split('\n')]
@@ -81,28 +87,18 @@ class RecipesView(LoginRequiredMixin, generic.ListView):
     paginate_by = 20
 
 
-def add_new_product(request):
+def add_new_user_product(request):
     if request.method == 'POST':
-        form = AddProductForm(request.POST)
+        form = AddUserProductForm(request.POST)
         if form.is_valid():
             try:
                 product_in_database = Product.objects.get(name=form.cleaned_data['product_name'])
-                product_instance = UserProduct()
-                product_instance.user = request.user
-                product_instance.product = product_in_database
-                product_instance.number = form.cleaned_data['number']
-                product_instance.expiration_date = form.cleaned_data['expiration_date']
-                product_instance.save()
+                create_new_user_product(request.user, form, product_in_database)
             except:
                 product = Product()
                 product.name = form.cleaned_data['product_name']
                 product.save()
-                product_instance = UserProduct()
-                product_instance.user = request.user
-                product_instance.product = product
-                product_instance.number = form.cleaned_data['number']
-                product_instance.expiration_date = form.cleaned_data['expiration_date']
-                product_instance.save()
+                create_new_user_product(request.user, form, product)
 
             return HttpResponseRedirect(reverse('product_list'))
     else:
@@ -110,13 +106,9 @@ def add_new_product(request):
             'product_name': '',
             'expiration_date': date.today()
         }
-        form = AddProductForm(initial=initial)
-    return render(request, 'zero_waste_app/add_new_product.html', { 'form': form })
+        form = AddUserProductForm(initial=initial)
+    return render(request, 'zero_waste_app/add_new_user_product.html', { 'form': form })
 
-
-# def add_product(request, pk):
-#     product_instance = get_object_or_404(ProductInstance, pk=pk)
-#     if request.method == 'POST':
 
 def add_new_user(request):
     if request.method == 'POST':
@@ -136,10 +128,82 @@ def add_new_user(request):
     return render(request, 'zero_waste_app/add_new_user.html', {'form': form})
 
 
-def recipes_per_user_products(user_products):
-    # user_products = UserProduct.objects.filter(user=user)
-    wanted_products = [user_pr.product for user_pr in user_products]
-    recipes_matching_user_products = RecipeIngredient.objects.filter(ingredient__in=wanted_products)
-    recipes_with_most_nr_of_product_match = Counter([product.recipe for product in recipes_matching_user_products])
-    # print(recipes_with_most_nr_of_product_match)
-    return [recipe[0] for recipe in sorted(recipes_with_most_nr_of_product_match.items(), key=lambda x: x[1], reverse=True)][:3]
+def add_user_product(request, product_id):
+    product_object = UserProduct.objects.get(pk=product_id)
+    product_object.number += 1
+    product_object.save()
+    return HttpResponseRedirect(reverse('product_list'))
+
+
+def sub_user_product(request, product_id):
+    product_object = UserProduct.objects.get(pk=product_id)
+    product_object.number -= 1
+    product_object.save()
+    return HttpResponseRedirect(reverse('product_list'))
+
+
+def delete_user_product(request, product_id):
+    product_object = UserProduct.objects.get(pk=product_id)
+    product_object.delete()
+    return HttpResponseRedirect(reverse('product_list'))
+
+
+def change_user_product(request, product_id):
+    product_object = UserProduct.objects.get(pk=product_id)
+    if request.method == 'POST':
+        form = ChangeUserProductForm(request.POST)
+        if form.is_valid():
+            product_object.number = form.cleaned_data['number']
+            product_object.expiration_date = form.cleaned_data['expiration_date']
+            product_object.save()
+            return HttpResponseRedirect(reverse('product_list'))
+    else:
+        initial = {
+            'product_name': product_object.product.name,
+            'number': product_object.number,
+            'expiration_date': product_object.expiration_date
+        }
+        form = ChangeUserProductForm(initial=initial)
+    return render(request, 'zero_waste_app/change_user_product.html', { 'form': form })
+
+
+def add_shopping_product(request, product_id):
+    product_object = UserShoppingList.objects.get(pk=product_id)
+    product_object.number += 1
+    product_object.save()
+    return HttpResponseRedirect(reverse('product_list'))
+
+
+def sub_shopping_product(request, product_id):
+    product_object = UserShoppingList.objects.get(pk=product_id)
+    product_object.number -= 1
+    product_object.save()
+    return HttpResponseRedirect(reverse('product_list'))
+
+
+def delete_shopping_product(request, product_id):
+    product_object = UserShoppingList.objects.get(pk=product_id)
+    product_object.delete()
+    return HttpResponseRedirect(reverse('product_list'))
+
+
+def add_new_shopping_product(request):
+    if request.method == 'POST':
+        form = AddShoppingProductForm(request.POST)
+        if form.is_valid():
+            try:
+                product_in_database = Product.objects.get(name=form.cleaned_data['product_name'])
+                create_new_shopping_product(request.user, form, product_in_database)
+            except:
+                product = Product()
+                product.name = form.cleaned_data['product_name']
+                product.save()
+                create_new_shopping_product(request.user, form, product)
+
+            return HttpResponseRedirect(reverse('shopping_list'))
+    else:
+        initial = {
+            'product_name': '',
+        }
+        form = AddShoppingProductForm(initial=initial)
+    return render(request, 'zero_waste_app/add_new_user_product.html', { 'form': form })
