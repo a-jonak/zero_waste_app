@@ -1,5 +1,4 @@
 from datetime import date
-import json
 import random
 
 from django.contrib.auth.decorators import login_required
@@ -93,9 +92,6 @@ def add_new_user(request):
 
 
 def update_user_product(request):
-    # data = json.loads(request.body)
-    # product_id = data['productId']
-    # action = data['action']
     if request.method == 'GET':
         product_id = request.GET['product_id']
         action = request.GET['action']
@@ -108,27 +104,7 @@ def update_user_product(request):
         product_object.save()
         if product_object.number <= 0:
             product_object.delete()
-    # product_object.number += 1
-    # product_object.save()
-    # return redirect('product_list')
     return JsonResponse(product_object.number, safe=False)
-
-
-# def add_user_product(product_object):
-#     # product_object = UserProduct.objects.get(pk=product_id)
-#     product_object.number += 1
-#     product_object.save()
-#     return product_object
-
-# def sub_user_product(product_object):
-#     # product_object = UserProduct.objects.get(pk=product_id)
-#     product_object.number -= 1
-#     if product_object.number <= 0:
-#         product_object.delete()
-#     else:
-#         product_object.save()
-#         # return redirect('product_list')
-#         return product_object
 
 
 def delete_user_product(request, product_id):
@@ -157,9 +133,6 @@ def change_user_product(request, product_id):
 
 
 def update_shopping_product(request):
-    # data = json.loads(request.body)
-    # product_id = data['productId']
-    # action = data['action']
     if request.method == 'GET':
         product_id = request.GET['product_id']
         action = request.GET['action']
@@ -172,24 +145,7 @@ def update_shopping_product(request):
         product_object.save()
         if product_object.amount <= 0:
             product_object.delete()
-    # product_object.number += 1
-    # product_object.save()
-    # return redirect('product_list')
     return JsonResponse(product_object.amount, safe=False)
-
-
-def add_shopping_product(request, product_id):
-    product_object = UserShoppingList.objects.get(pk=product_id)
-    product_object.amount += 1
-    product_object.save()
-    return redirect('shopping_list')
-
-
-def sub_shopping_product(request, product_id):
-    product_object = UserShoppingList.objects.get(pk=product_id)
-    product_object.amount -= 1
-    product_object.save()
-    return redirect('shopping_list')
 
 
 def delete_shopping_product(request, product_id):
@@ -220,12 +176,6 @@ def add_new_shopping_product(request):
     return render(request, 'zero_waste_app/add_new_user_product.html', { 'form': form })
 
 
-# def add_product_to_shopping_list(request, product_id):
-#     user_product = UserProduct.objects.get(pk=product_id)
-#     add_to_shopping_list(request, user_product.product)
-#     return redirect('product_list')
-
-
 def add_ingredient_to_shopping_list(request, product_id):
     recipe_ingredient = RecipeIngredient.objects.get(pk=product_id)
     add_to_shopping_list(request, recipe_ingredient.ingredient)
@@ -236,7 +186,4 @@ def add_product_to_shopping_list(request):
         product_id = request.GET['product_id']
         product_object = Product.objects.get(pk=product_id)
         add_to_shopping_list(request, product_object)
-    # product_object.number += 1
-    # product_object.save()
-    # return redirect('product_list')
     return JsonResponse("Produkt dodany do listy zakupów", safe=False)

@@ -25,52 +25,6 @@ for(var i = 0; i < addToSLBtns.length; i++){
     })
 }
 
-// function updateUserProduct(productId, action){
-//     var url = 'update_user_product'
-
-//     fetch(url, {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'X-CSRFToken': csrftoken,
-//         },
-//         body: JSON.stringify({'productId': productId, 'action': action})
-//     })
-
-//     .then((response) => {
-//         return response.json()
-//     })
-
-//     .then((data) => {
-//         location.send()
-//     })
-// }
-// $("#add_btn").click(function () {
-//     var productId;
-//     productId = $(this).attr("data-product");
-//     $.ajax({
-//         type: "GET",
-//         url: "update_user_product",
-//         data: {product_id: productId, action: 'add'},
-//         success: function (data) {
-//             $("#product_number").html(data);
-//         }
-//     });
-// })
-
-// $("#sub_btn").click(function () {
-//     var productId;
-//     productId = $(this).attr("data-product");
-//     $.ajax({
-//         type: "GET",
-//         url: "update_user_product",
-//         data: {product_id: productId, action: 'sub'},
-//         success: function (data) {
-//             $("#product_number").html(data);
-//         }
-//     });
-// })
-
 function updateUserProduct(productId, action) {
     $.ajax({
             type: "GET",
