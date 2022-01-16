@@ -1,3 +1,1 @@
-web: python food_management/manage.py makemigrations
-python food_management/manage.py migrate
-python food_management/manage.py runserver
+web: python manage.py runserver 0.0.0.0:\$PORT
