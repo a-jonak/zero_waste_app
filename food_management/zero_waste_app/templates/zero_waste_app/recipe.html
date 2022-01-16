@@ -13,10 +13,7 @@
         <td>{{ product.ingredient.name }}</td>
         <td>{{ product.amount }} {{ product.unit }}</td>
         <td>
-            <form action="{% url 'add_ingredient_to_shopping_list' product.id %}" method="get">
-            {% csrf_token %}
-                <button type='submit'>dodaj do listy zakupów</button>
-            </form>
+            <button class="btn btn-outline-secondary add-to-shopping-list" data-product="{{ product.ingredient.id }}">dodaj do listy zakupów</button>
         </td>
     </tr>
     {% endfor %}

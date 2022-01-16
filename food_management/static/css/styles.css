@@ -73,35 +73,26 @@ footer {
 
 a {
     color: black;
-}
-
-a:hover {
-    background-color: var(--light-grey);
-    text-decoration: none;
-    color: black;
-}
-
-@media (max-width: 600px) {
-    nav, article {
-      width: 100%;
-      height: auto;
-    }
-  }
-
-
-button {
-    background-color: white;
-    text-align: center;
     border: none;
 }
 
-button:hover {
-    background-color: var(--light-grey);
+
+@media (max-width: 600px) {
+    nav, article {
+        width: 100%;
+        height: auto;
+    }
 }
 
-#back-button {
-    border: 1px solid;
+
+.back-button, .back-button:hover {
+    text-decoration: none;
 }
+
+.back-button:hover {
+    color: white;
+}
+
 
 table {
     border-collapse: collapse;
@@ -129,19 +120,12 @@ li {
     padding: 5px;
 }
 
-input[type=text], select {
-    display: inline-block;
-    border: 1px solid var(--dark-grey);
-    border-radius: 4px;
-    box-sizing: border-box;
+button {
+    color: black;
 }
 
-input[type=submit] {
-    background-color: white;
-    border: 1px solid var(--dark-grey);
-    cursor: pointer;
+.btn-outline-secondary {
+    color: black;
 }
 
-input[type=submit]:hover {
-    background-color: var(--light-grey);
-}
+

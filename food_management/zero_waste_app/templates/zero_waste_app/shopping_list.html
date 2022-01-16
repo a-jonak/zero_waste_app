@@ -12,25 +12,24 @@
         <tr>
             <td>{{ item.product.name }}</td>
             <td></td>
-            <td>{{ item.amount }}</td>
+            <td id="product_amount{{ item.id }}">{{ item.amount }}</td>
             <td>
-                <form action="{% url 'add_shopping_product' item.id %}" method="get">
-                {% csrf_token %}
-                    <button name='add-product-button' type='submit' value='1'>+</button>
-                </form>
-                <form action="{% url 'sub_shopping_product' item.id %}" method="get">
-                {% csrf_token %}
-                    <button name='sub-product-button' type='submit' value='1'>–</button>
-                </form>
+                <button data-product="{{ item.id }}" data-action="add" class="btn btn-outline-secondary update-shopping-product">+</button>
+                <button data-product="{{ item.id }}" data-action="sub" class="btn btn-outline-secondary update-shopping-product">–</button>
+                
             </td>
             <td>
                 <form action="{% url 'delete_shopping_product' item.id %}" method="get">
                 {% csrf_token %}
-                    <button name='delete-product-button' type='submit' value='0'>usuń</button>
+                    <button class="btn btn-outline-secondary" name='delete-product-button' type='submit' value='0'>usuń</button>
                 </form>
             </td>
         {% endfor %}
     </table>
     <br>
-    <button><a href="{% url 'add_new_shopping_product' %}">Dodaj produkt</a></button>
+    <form action="{% url 'add_new_shopping_product' %}" method="get">
+        {% csrf_token %}
+        <button class="btn btn-outline-secondary">Dodaj produkt</button>
+    </form>
+    
 {% endblock %}

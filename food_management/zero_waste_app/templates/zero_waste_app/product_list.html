@@ -7,24 +7,17 @@
             <th>Produkt</th>
             <th>Ilość</th>
             <th></th>
-            <th></th>
             <th>Data ważności</th>
         </tr>
         {% for item in userproduct_list %}
         <tr>
             <td>{{ item.product.name }}</td>
-            <td>{{ item.number }}</td>
+            <td id="product_number{{ item.id }}">{{ item.number }}</td>
             <td>
-                <form action="{% url 'add_user_product' item.id %}" method="get">
-                {% csrf_token %}
-                    <button name='add-product-button' type='submit' value='1'>+</button>
-                </form>
-                <form action="{% url 'sub_user_product' item.id %}" method="get">
-                {% csrf_token %}
-                    <button name='sub-product-button' type='submit' value='1'>–</button>
-                </form>
+                <button id="add_btn" data-product="{{ item.id }}" data-action="add" class="btn btn-outline-secondary update-user-product">+</button>
+                <button id="sub_btn" data-product="{{ item.id }}" data-action="sub" class="btn btn-outline-secondary update-user-product">–</button>
+                
             </td>
-            <td></td>
             {% if item.has_short_expiration_date %}
             <td><p id="warning">{{ item.expiration_date }}</p></td>
             {% else %}
@@ -37,26 +30,27 @@
             <td>
                 <form action="{% url 'delete_user_product' item.id %}" method="get">
                 {% csrf_token %}
-                    <button name='delete-product-button' type='submit' value='0'>usuń</button>
+                    <button class="btn btn-outline-secondary" name='delete-product-button' type='submit' value='0'>usuń</button>
                 </form>
             </td>
             <td>
                 <form action="{% url 'change_user_product' item.id %}" method="get">
                 {% csrf_token %}
-                    <button name='change-product-button' type='submit' value='change'>edytuj</button>
+                    <button class="btn btn-outline-secondary" name='change-product-button' type='submit' value='change'>edytuj</button>
                 </form>
             </td>
             <td>
-                <form action="{% url 'add_product_to_shopping_list' item.id %}" method="get">
-                {% csrf_token %}
-                    <button name='shopping-list-button' type='submit' value='change'>dodaj do listy zakupów</button>
-                </form>
+                <button class="btn btn-outline-secondary add-to-shopping-list" data-product="{{ item.product.id }}">dodaj do listy zakupów</button>
             </td>
         </tr>
         {% endfor %}
     </table>
     <br>
-    <button><a href="{% url 'add_new_user_product' %}">Dodaj produkt</a></button>
+    <form action="{% url 'add_new_user_product' %}" method="get">
+        {% csrf_token %}
+        <button class="btn btn-outline-secondary">Dodaj produkt</button>
+    </form>
+    
 
     <br><br><br>
     <p>Niektóre z posiadanych produktów są wykorzystywane w poniższych przepisach. Może coś Ci wpadnie w oko.</p>

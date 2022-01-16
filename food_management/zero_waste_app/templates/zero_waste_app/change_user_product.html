@@ -7,7 +7,7 @@
         <table>
             {{ form.as_table }}
         </table>
-        <input type="submit" value="Potwierdź">
-        <button id='back-button'><a href="{% url 'product_list' %}">Powrót</a></button>
+        <button class="btn btn-outline-secondary" type="submit">Potwierdź</button>
+        <button class="btn btn-outline-secondary"><a class='back-button' href="{% url 'product_list' %}">Powrót</a></button>
     </form>
 {% endblock %}

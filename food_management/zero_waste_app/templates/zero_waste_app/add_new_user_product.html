@@ -1,13 +1,13 @@
 {% extends "zero_waste_app/base_generic.html" %}
 
-{% block  content %}
+{% block content %}
     <h2>Dodaj produkt</h2>
     <form action="" method="post">
         {% csrf_token %}
         <table>
             {{ form.as_table }}
         </table>
-        <input type="submit" value="Potwierdź">
-        <button id='back-button'><a href="{% url 'product_list' %}">Powrót</a></button>
+        <button class="btn btn-outline-secondary" type="submit">Potwierdź</button>
+        <button class="btn btn-outline-secondary"><a class="back-button" href="{% url 'product_list' %}">Powrót</a></button>
     </form>
 {% endblock %}

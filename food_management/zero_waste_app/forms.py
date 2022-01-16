@@ -2,7 +2,10 @@ import datetime
 
 from django import forms
 from django.contrib.auth.password_validation import validate_password
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core.exceptions import ValidationError
+
+from .models import User
 
 
 class AddUserProductForm(forms.Form):
@@ -18,9 +21,17 @@ class AddUserProductForm(forms.Form):
 
 
 class AddUserForm(forms.Form):
-    user_name = forms.CharField(label='Nazwa użytkownika', help_text='Wprowadź nazwę użytkownika')
+    username = forms.CharField(label='Nazwa użytkownika', help_text='Wprowadź nazwę użytkownika')
     email = forms.EmailField(label='Adres email', help_text='Wprowadź adres email')
     password = forms.CharField(label='Hasło', help_text='Wprowadź hasło', widget=forms.PasswordInput())
+
+    def clean_username(self):
+        data = self.cleaned_data['username']
+        try:
+            user = User.objects.get(username=data)
+            raise ValidationError('Użytkownik o takiej nazwie już istnieje: {}'.format(data))
+        except:
+            return data
 
     def clean_password(self):
         data = self.cleaned_data['password']
