@@ -2,3 +2,4 @@
 **/db.splite3
 venv/
 staticfiles/
+.env
