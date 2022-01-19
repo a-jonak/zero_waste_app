@@ -1,1 +1,1 @@
-web: gunicorn food_management.food_management.wsgi
+web: python manage.py runserver 0.0.0.0:\$PORT
