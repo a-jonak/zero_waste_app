@@ -15,8 +15,7 @@ from .scripts import add_to_shopping_list, create_new_shopping_product, create_n
 
 def index(request):
     recipes = Recipe.objects.all()
-    random_indexes = random.sample(range(1, len(recipes)), 5)
-    example_recipes = Recipe.objects.filter(pk__in=random_indexes)
+    example_recipes = [recipes[index] for index in random.sample(range(0, len(recipes)), 5)]
     return render(request, 'zero_waste_app/index.html', {'example_recipes': example_recipes})
 
 
