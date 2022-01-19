@@ -1,2 +1,2 @@
-web: gunicorn food_management.food_management.wsgi --log-file -
-release: python food_management/manage.py migrate
+web: gunicorn food_management.wsgi --log-file -
+release: python manage.py migrate
