@@ -74,16 +74,16 @@ WSGI_APPLICATION = 'food_management.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'recipes',
-        'USER': 'zwa',
-        'PASSWORD': 'thesis',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'recipes',
+#         'USER': 'zwa',
+#         'PASSWORD': 'thesis',
+#         'HOST': '127.0.0.1',
+#         'PORT': '5432',
+#     }
+# }
 # db_from_env = dj_database_url.config(conn_max_age=600, ssl_require=True)
 # DATABASES['default'].update(db_from_env)
 
