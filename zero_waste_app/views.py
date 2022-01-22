@@ -3,12 +3,11 @@ import random
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import Group, User
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import generic
 
-from .forms import AddShoppingProductForm, AddUserForm, AddUserProductForm, ChangeUserProductForm
+from .forms import AddShoppingProductForm, AddUserProductForm, ChangeUserProductForm, CustomUserCreationForm
 from .models import Product, Recipe, RecipeIngredient, UserProduct, UserShoppingList
 from .scripts import add_to_shopping_list, create_new_shopping_product, create_new_user_product, recipes_per_user_products
 
@@ -74,19 +73,12 @@ def add_new_user_product(request):
 
 def add_new_user(request):
     if request.method == 'POST':
-        form = AddUserForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = User.objects.create_user(
-                form.cleaned_data['username'],
-                form.cleaned_data['email'],
-                form.cleaned_data['password']
-                )
-            group = Group.objects.get(name='Zero Waste App users')
-            group.user_set.add(user)
-            user.save()
+            form.save()
             return redirect('login')
     else:
-        form = AddUserForm()
+        form = CustomUserCreationForm()
     return render(request, 'zero_waste_app/add_new_user.html', {'form': form})
 
 

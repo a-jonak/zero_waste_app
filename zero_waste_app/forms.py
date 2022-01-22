@@ -1,11 +1,49 @@
 import datetime
 
 from django import forms
+from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
-from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core.exceptions import ValidationError
 
-from .models import User
+
+class CustomUserCreationForm(forms.Form):
+    username = forms.CharField(label='Nazwa użytkownika', min_length=4, max_length=150)
+    email = forms.EmailField(label='Adres email', widget=forms.EmailInput)
+    password1 = forms.CharField(label='Hasło', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Powtórz hasło', widget=forms.PasswordInput)
+
+    def clean_username(self):
+        username = self.cleaned_data['username'].lower()
+        r = User.objects.filter(username=username)
+        if r.count():
+            raise  ValidationError("Użytkownik o takiej nazwie już istnieje")
+        return username
+    
+    def clean_password1(self):
+        data = self.cleaned_data['password1']
+        try:
+            validate_password(data)
+            return data
+        except:
+            raise ValidationError("To hasło jest zbyt krótkie. Musi zawierać co najmniej 8 znaków."
+                                  "To hasło jest zbyt proste.")
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get('password1')
+        password2 = self.cleaned_data.get('password2')
+
+        if password1 and password2 and password1 != password2:
+            raise ValidationError("Hasło się nie zgadza")
+
+        return password2
+
+    def save(self, commit=True):
+        user = User.objects.create_user(
+            self.cleaned_data['username'],
+            self.cleaned_data['email'],
+            self.cleaned_data['password1']
+        )
+        return user
 
 
 class AddUserProductForm(forms.Form):
@@ -17,25 +55,6 @@ class AddUserProductForm(forms.Form):
         data = self.cleaned_data['expiration_date']
         if data < datetime.date.today():
             raise ValidationError('Niepoprawna data - produkt po dacie ważności')
-        return data
-
-
-class AddUserForm(forms.Form):
-    username = forms.CharField(label='Nazwa użytkownika', help_text='Wprowadź nazwę użytkownika')
-    email = forms.EmailField(label='Adres email', help_text='Wprowadź adres email')
-    password = forms.CharField(label='Hasło', help_text='Wprowadź hasło', widget=forms.PasswordInput())
-
-    def clean_username(self):
-        data = self.cleaned_data['username']
-        try:
-            user = User.objects.get(username=data)
-            raise ValidationError('Użytkownik o takiej nazwie już istnieje: {}'.format(data))
-        except:
-            return data
-
-    def clean_password(self):
-        data = self.cleaned_data['password']
-        validate_password(data)
         return data
 
 
