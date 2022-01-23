@@ -1,6 +1,8 @@
 # coding=utf8
 # curl -s "http://www.unicode.org/Public/UNIDATA/extracted/DerivedNumericValues.txt" | grep "VULGAR FRACTION"
-fractions = {
+import re
+
+FRACTIONS = {
     0x2189: 0.0,  # ; ; 0 # No       VULGAR FRACTION ZERO THIRDS
     0x2152: 0.1,  # ; ; 1/10 # No       VULGAR FRACTION ONE TENTH
     0x2151: 0.11111111,  # ; ; 1/9 # No       VULGAR FRACTION ONE NINTH
@@ -22,23 +24,12 @@ fractions = {
     0x215E: 0.875,  # ; ; 7/8 # No       VULGAR FRACTION SEVEN EIGHTHS
 }
 
-# rx = r'(?u)([+-])?(\d*)(%s)' % '|'.join(map(chr, fractions))
-rx = r'(?u)(%s)' % '|'.join(map(chr, fractions))
-
-test = u'15⅑ and ¼ and +212½ and -⅜'
-
-import re
-
-# for sign, d, f in re.findall(rx, test):
-#     sign = -1 if sign == '-' else 1
-#     d = int(d) if d else 0
-#     number = sign * (d + fractions[ord(f)])
-#     print('found', number)
+RX = r'(?u)(%s)' % '|'.join(map(chr, FRACTIONS))
 
 
 def parse_problematic_numbers(tekst):
-    to_change = re.findall(rx, tekst)
+    to_change = re.findall(RX, tekst)
     if to_change:
-        return fractions[ord(to_change[0])]
+        return FRACTIONS[ord(to_change[0])]
     else:
         return tekst

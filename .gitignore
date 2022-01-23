@@ -1,4 +1,5 @@
-# ignore all pycache
 **/__pycache__
 **/db.splite3
 venv/
+staticfiles/
+.env

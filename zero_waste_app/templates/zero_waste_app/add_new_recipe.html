@@ -1,0 +1,55 @@
+{% extends "zero_waste_app/base_generic.html" %}
+
+{% block  content %}
+    <h2>Dodaj przepis</h2>
+    <p>UWAGA!
+        Zanim zatwierdzisz przesłany przepis sprawdź czy wszystkie składniki są poprawniej postaci.
+        Inaczej może być problem z dodaniem przepisu.
+    </p>
+    <p>Sprawdź też czy podana ilość nie jest postaci 1,5 (jeśli tak jest zamień przecinek na kropkę, poprawnie: 1.5)</p>
+    <p>Poprawna postać:</p>
+    <p>nazwa: mleko, ilość: 2, jednostka: szklanki</p>
+    <p>nazwa: cukier, ilość: 1, jednostka: kg</p>
+    <p>Aktualnie obsługiwane strony, z których możesz podawać przepisy: 
+        <a href="https://www.kwestiasmaku.com/">kwestiasmaku.com</a>
+        oraz
+        <a href="https://kuchnialidla.pl/">kuchnialidla.pl</a>
+    </p>
+    <table>
+        <tr>
+            <td>Link do przepisu:</td>
+            <td>
+                <input id='recipe_link' type="text">
+                <button class="btn btn-outline-secondary add-recipe-link">Prześlij</button>
+            </td>
+        </tr>
+    </table>
+    
+    <p>Prześlij przepis żeby zobaczyć jego treść poniżej</p>
+    <br>
+    <form action="" method="post">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td>Nazwa przepisu:</td>
+                <td>
+                    <input type="text" name="recipe_name" id="recipe_name" size="60" required>
+                </td>
+            </tr>
+            <tr>
+                <td>Składniki:</td>
+                <td>
+                    <textarea type="text" name="recipe_ingredients" id="recipe_ingredients" cols="50" rows="10"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>Sposób przygotowania:</td>
+                <td>
+                    <textarea type="text" name="recipe_instructions" id="recipe_instructions" cols="50" rows="10"></textarea>
+                </td>
+            </tr>
+        </table>
+        <br>
+        <button class="btn btn-outline-secondary" type="submit">Potwierdź</button>
+    </form>
+{% endblock %}

@@ -1,6 +1,8 @@
 from typing import Counter
 
-from .models import RecipeIngredient, UserProduct, UserShoppingList
+from .models import Product, Recipe, RecipeIngredient, UserProduct, UserShoppingList
+from .parse_fractions import parse_problematic_numbers
+
 
 def recipes_per_user_products(user_products):
     wanted_products = [user_pr.product for user_pr in user_products]
@@ -36,3 +38,33 @@ def add_to_shopping_list(request, product):
         new_product_in_sp.user = request.user
         new_product_in_sp.product = product
         new_product_in_sp.save()
+
+
+def get_units_present_in_database():
+    units = set(unit[0] for unit in RecipeIngredient.objects.values_list('unit'))
+    return units
+
+
+def add_new_recipe_to_database(recipe_name, ingredients, instructions):
+    new_recipe = Recipe()
+    new_recipe.name = recipe_name
+    new_recipe.instructions = instructions
+    new_recipe.save()
+    for ingredient in ingredients.split('\n'):
+        name, amount, unit = ingredient.split(', ')
+        ingredient_name = name.split(': ')[1]
+        ingredient_amount = parse_problematic_numbers(amount.split(': ')[1])
+        ingredient_unit = unit.split(': ')[1]
+        try:
+            product = Product.objects.get(name=ingredient_name)
+        except:
+            product = Product()
+            product.name = ingredient_name
+            product.save()
+        recipe_ingredient = RecipeIngredient()
+        recipe_ingredient.recipe = new_recipe
+        recipe_ingredient.ingredient = product
+        recipe_ingredient.amount = ingredient_amount
+        recipe_ingredient.unit = ingredient_unit
+        recipe_ingredient.save()
+    return new_recipe
