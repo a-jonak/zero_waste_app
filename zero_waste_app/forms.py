@@ -73,3 +73,9 @@ class ChangeUserProductForm(forms.Form):
 class AddShoppingProductForm(forms.Form):
     product_name = forms.CharField(label='Nazwa produktu')
     amount = forms.IntegerField(label='Ilość', initial=1, widget=forms.NumberInput())
+
+
+class AddRecipeForm(forms.Form):
+    recipe_name = forms.CharField(label='Nazwa przepisu')
+    recipe_ingredients = forms.CharField(label='Składniki', widget=forms.TextInput())
+    recipe_instructions = forms.CharField(label='Sposób przygotowania', widget=forms.TextInput())

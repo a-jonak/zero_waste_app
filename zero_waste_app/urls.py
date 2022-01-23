@@ -18,4 +18,6 @@ urlpatterns = [
     path('shopping_list/add_product', views.add_new_shopping_product, name='add_new_shopping_product'),
     path('shopping_list/update_shopping_product', views.update_shopping_product, name='update_shopping_product'),
     path('shopping_list/delete=<int:product_id>', views.delete_shopping_product, name='delete_shopping_product'),
+    path('add_new_recipe/', views.add_new_recipe, name='add_new_recipe'),
+    path('add_new_recipe/add_recipe', views.add_recipe, name='add_recipe'),
 ]

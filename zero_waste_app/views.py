@@ -7,9 +7,11 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import generic
 
-from .forms import AddShoppingProductForm, AddUserProductForm, ChangeUserProductForm, CustomUserCreationForm
+from .forms import AddRecipeForm, AddShoppingProductForm, AddUserProductForm, ChangeUserProductForm, CustomUserCreationForm
 from .models import Product, Recipe, RecipeIngredient, UserProduct, UserShoppingList
-from .scripts import add_to_shopping_list, create_new_shopping_product, create_new_user_product, recipes_per_user_products
+from .scripts import (add_new_recipe_to_database, add_to_shopping_list, create_new_shopping_product, create_new_user_product,
+recipes_per_user_products, get_units_present_in_database)
+from .parse_recipe import get_recipe_informations
 
 
 def index(request):
@@ -172,9 +174,37 @@ def add_ingredient_to_shopping_list(request, product_id):
     add_to_shopping_list(request, recipe_ingredient.ingredient)
     return redirect('recipe', recipe_id=recipe_ingredient.recipe.id)
 
+
 def add_product_to_shopping_list(request):
     if request.method == 'GET':
         product_id = request.GET['product_id']
         product_object = Product.objects.get(pk=product_id)
         add_to_shopping_list(request, product_object)
     return JsonResponse("Produkt dodany do listy zakupów", safe=False)
+
+
+def add_recipe(request):
+    if request.method == 'GET':
+        page_url = request.GET['recipe_url']
+        units = get_units_present_in_database()
+        name, ingredients, instructions = get_recipe_informations(page_url, units)
+        return JsonResponse({'name': name, 'ingredients': ingredients, 'instructions': instructions})
+
+
+@login_required
+def add_new_recipe(request):
+    if request.method == 'POST':
+        form = AddRecipeForm(request.POST)
+        if form.is_valid():
+            recipe = add_new_recipe_to_database(form.cleaned_data['recipe_name'], form.cleaned_data['recipe_ingredients'],
+                                    form.cleaned_data['recipe_instructions'])
+            return redirect('recipe', recipe_id=recipe.id)
+    else:
+        initial = {
+            'recipe_name': '',
+            'ingredients': '',
+            'instructions': ''
+        }
+        form = AddRecipeForm(initial=initial)
+
+    return render(request, 'zero_waste_app/add_new_recipe.html', {'form': form})

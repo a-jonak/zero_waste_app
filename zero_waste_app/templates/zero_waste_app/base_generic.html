@@ -38,6 +38,7 @@
                     <ul class="sidebar-nav">
                         <li><a href="{% url 'index' %}">Home</a></li>
                         <li><a href="{% url 'recipes' %}">Wszystkie przepisy</a></li>
+                        <li><a href="{% url 'add_new_recipe' %}">Dodaj przepis</a></li>
                         <br>
                         {% if user.is_authenticated %}
                             <li>Cześć {{ user.get_username }}!</li>
