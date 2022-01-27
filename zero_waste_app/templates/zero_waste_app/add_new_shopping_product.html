@@ -11,17 +11,10 @@
             </tr>
             <tr>
                 <td>Ilość:</td>
-                <td>{{ form.number }}</td>
-            </tr>
-            <tr>
-                <td>Data ważności:</td>
-                <td>{{ form.expiration_date }}</td>
-                {% if form.errors %}
-                <p>{{ form.expiration_date.errors }}</p>
-                {% endif %}
+                <td>{{ form.amount }}</td>
             </tr>
         </table>
         <button class="btn btn-outline-secondary" type="submit">Potwierdź</button>
-        <button class="btn btn-outline-secondary"><a class="back-button" href="{% url 'product_list' %}">Powrót</a></button>
+        <button class="btn btn-outline-secondary"><a class="back-button" href="{% url 'shopping_list' %}">Powrót</a></button>
     </form>
 {% endblock %}

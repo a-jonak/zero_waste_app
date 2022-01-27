@@ -168,7 +168,7 @@ def add_new_shopping_product(request):
             'product_name': '',
         }
         form = AddShoppingProductForm(initial=initial)
-    return render(request, 'zero_waste_app/add_new_user_product.html', { 'form': form })
+    return render(request, 'zero_waste_app/add_new_shopping_product.html', { 'form': form })
 
 
 def add_ingredient_to_shopping_list(request, product_id):
