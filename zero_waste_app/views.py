@@ -16,7 +16,9 @@ from .parse_recipe import get_recipe_informations
 
 def index(request):
     recipes = Recipe.objects.all()
-    example_recipes = [recipes[index] for index in random.sample(range(0, len(recipes)), 5)]
+    example_recipes = []
+    if len(recipes) > 0:
+        example_recipes = [recipes[index] for index in random.sample(range(0, len(recipes)), 5)]
     return render(request, 'zero_waste_app/index.html', {'example_recipes': example_recipes})
 
 
@@ -197,7 +199,7 @@ def add_new_recipe(request):
         form = AddRecipeForm(request.POST)
         if form.is_valid():
             recipe = add_new_recipe_to_database(form.cleaned_data['recipe_name'], form.cleaned_data['recipe_ingredients'],
-                                    form.cleaned_data['recipe_instructions'])
+                                                form.cleaned_data['recipe_instructions'])
             return redirect('recipe', recipe_id=recipe.id)
     else:
         initial = {

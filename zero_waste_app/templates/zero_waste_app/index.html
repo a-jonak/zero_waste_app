@@ -6,11 +6,16 @@
     <p>Możesz kontrolować posiadane produkty i ich daty ważności za pomocą swojej: <a href="product_list">listy produktów</a></p>
     <p>Gdy coś się skończy albo potrzebujesz czegoś do przepisu, dodaj to do: <a href="shopping_list">listy zakupów</a></p>
     <p>W poszukiwaniu inspiracji co dobrego zjeść tym razem zawsze możesz przejrzeć: <a href="recipes">dostępne przepisy</a></p>
+    <p>Masz jakiś przepis, który bardzo lubisz i chcesz go mieć pod ręką? <a href="add_new_recipe">Dodaj go do reszty przepisów</a></p>
     <p>Z przepisów może zainteresują cię na przykład:</p>
     <ul>
-        {% for recipe in example_recipes %}
-        <li><a href="{% url 'recipe' recipe.id %}">{{ recipe.name }}</a></li>
-        {% endfor %}
+        {% if example_recipes%}
+            {% for recipe in example_recipes %}
+            <li><a href="{% url 'recipe' recipe.id %}">{{ recipe.name }}</a></li>
+            {% endfor %}
+        {% else %}
+            <li>Brak przepisów w bazie danych</li>
+        {% endif %}
     </ul>
 
 
