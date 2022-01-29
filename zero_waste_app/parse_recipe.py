@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup
 import requests
 import re
 
+from .parse_fractions import parse_problematic_numbers
+
 
 def open_page(url):
     return BeautifulSoup(requests.get(url).content, 'html.parser')
@@ -65,7 +67,7 @@ class KwestiaSmaku:
         for ingredient in ingredients:
             amount, unit, ingredient_name_list = self.parse_ingredient(ingredient)
             ingredient_name = ' '.join(ingredient_name_list)
-            d.append('nazwa: {}, ilość: {}, jednostka: {}'.format(ingredient_name, amount, unit))
+            d.append('nazwa: {}, ilość: {}, jednostka: {}'.format(ingredient_name, parse_problematic_numbers(amount), unit))
         return d
 
 
@@ -100,7 +102,7 @@ class KuchniaLidla:
             parsed_ingredient = self.parse_ingredient(ingredient)
             if len(parsed_ingredient) > 1:
                 product, amount, unit = parsed_ingredient
-                d.append('nazwa: {}, ilość: {}, jednostka: {}'.format(product, amount, unit))
+                d.append('nazwa: {}, ilość: {}, jednostka: {}'.format(product, parse_problematic_numbers(amount), unit))
             else:
                 d.append('nazwa: {}, ilość: 1, jednostka: szt.'.format(parsed_ingredient[0], amount, unit))
         return d

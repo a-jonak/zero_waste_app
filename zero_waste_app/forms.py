@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 
+from .scripts import check_ingredients
+
 
 class CustomUserCreationForm(forms.Form):
     username = forms.CharField(label='Nazwa użytkownika', min_length=4, max_length=150)
@@ -79,3 +81,8 @@ class AddRecipeForm(forms.Form):
     recipe_name = forms.CharField(label='Nazwa przepisu')
     recipe_ingredients = forms.CharField(label='Składniki', widget=forms.TextInput())
     recipe_instructions = forms.CharField(label='Sposób przygotowania', widget=forms.TextInput())
+
+    def clean_recipe_ingredients(self):
+        data = self.cleaned_data['recipe_ingredients']
+        check_ingredients(data)
+        return data

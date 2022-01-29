@@ -41,6 +41,9 @@
                 <td>
                     <textarea type="text" name="recipe_ingredients" id="recipe_ingredients" cols="50" rows="10"></textarea>
                 </td>
+                {% if form.errors %}
+                <td>{{ form.recipe_ingredients.errors }}</td>
+                {% endif %}
             </tr>
             <tr>
                 <td>Sposób przygotowania:</td>

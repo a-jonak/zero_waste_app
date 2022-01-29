@@ -1,5 +1,7 @@
 from typing import Counter
 
+from django.core.exceptions import ValidationError
+
 from .models import Product, Recipe, RecipeIngredient, UserProduct, UserShoppingList
 from .parse_fractions import parse_problematic_numbers
 
@@ -68,3 +70,43 @@ def add_new_recipe_to_database(recipe_name, ingredients, instructions):
         recipe_ingredient.unit = ingredient_unit
         recipe_ingredient.save()
     return new_recipe
+
+
+def check_ingredients(ingredients):
+    for ingredient in ingredients.split('\n'):
+        try:
+            name, amount, unit = ingredient.split(', ')
+            check_recipe_ingredient_amount(amount)
+            check_recipe_ingredient_name(name)
+            check_recipe_ingredient_unit(unit)
+        except:
+            raise ValidationError('Niepoprawny format składnika: {}'.format(ingredient))
+
+
+def check_recipe_ingredient_name(name):
+    try:
+        name_tag, _ = name.split(': ')
+        if name_tag != 'nazwa':
+            raise ValidationError()
+    except:
+        raise ValidationError()
+
+
+def check_recipe_ingredient_amount(amount):
+    try:
+        amount_tag, amount_value = amount.split(': ')
+        float(amount_value)
+        if amount_tag != 'ilość':
+            raise ValidationError()
+    except:
+        raise ValidationError()
+
+
+
+def check_recipe_ingredient_unit(unit):
+    try:
+        unit_tag, _ = unit.split(': ')
+        if unit_tag != 'jednostka':
+            raise ValidationError()
+    except:
+        raise ValidationError()

@@ -26,11 +26,6 @@ class UserProduct(models.Model):
     def after_expiration_date(self):
         return self.expiration_date - date.today() < timedelta(days=0)
 
-    class Meta:
-        permissions = (('can_add_new_product', 'Add new product'),
-                       ('can_add_existing_product', 'Add product'),
-                       ('can_delete_product', 'Delete product'),)
-
 
 class Recipe(models.Model):
     name = models.CharField(max_length=100)

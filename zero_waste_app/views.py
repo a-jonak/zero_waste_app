@@ -171,12 +171,6 @@ def add_new_shopping_product(request):
     return render(request, 'zero_waste_app/add_new_shopping_product.html', { 'form': form })
 
 
-def add_ingredient_to_shopping_list(request, product_id):
-    recipe_ingredient = RecipeIngredient.objects.get(pk=product_id)
-    add_to_shopping_list(request, recipe_ingredient.ingredient)
-    return redirect('recipe', recipe_id=recipe_ingredient.recipe.id)
-
-
 def add_product_to_shopping_list(request):
     if request.method == 'GET':
         product_id = request.GET['product_id']
