@@ -25,52 +25,6 @@ def parse_recipe_instruction(instructions):
     return '\n'.join([line for line in instructions.split('\n') if line.strip()])
 
 
-class KwestiaSmaku:
-    def __init__(self, page_content, units) -> None:
-        self._page_content = page_content
-        self._units = units
-
-    def get_recipe_name(self):
-        return self._page_content.find('h1', {'class': 'przepis'}).text
-
-    def get_recipe_ingredients(self):
-        regex = re.compile('.*skladniki.*')
-        ingredients = normalize_ingredients(get_specific_div(self._page_content, regex))
-        return self.prepare_ingredients_to_database(ingredients)
-
-    def get_recipe_instructions(self):
-        regex = re.compile('.*przygotowanie.*')
-        instructions = get_specific_div(self._page_content, regex).text
-        return parse_recipe_instruction(instructions)
-
-    def parse_ingredient(self, ingredient):
-        parsed_ingredient = []
-        amount_and_product = ingredient.split(' ')
-        try:
-            if '/' in amount_and_product[0]:
-                amount = int(amount_and_product[0][0]) / int(amount_and_product[0][2])
-            else:
-                amount = int(amount_and_product[0])
-            parsed_ingredient.append(amount)
-            if amount_and_product[1] in self._units:
-                parsed_ingredient.append(amount_and_product[1])
-                parsed_ingredient.append(amount_and_product[2:])
-            else:
-                parsed_ingredient.append('szt.')
-                parsed_ingredient.append(amount_and_product[1:])
-        except:
-            parsed_ingredient = ['1', 'szt.', amount_and_product]
-        return parsed_ingredient
-
-    def prepare_ingredients_to_database(self, ingredients):
-        d = []
-        for ingredient in ingredients:
-            amount, unit, ingredient_name_list = self.parse_ingredient(ingredient)
-            ingredient_name = ' '.join(ingredient_name_list)
-            d.append('nazwa: {}, ilość: {}, jednostka: {}'.format(ingredient_name, parse_problematic_numbers(amount), unit))
-        return d
-
-
 class KuchniaLidla:
     def __init__(self, page_content) -> None:
         self._page_content = page_content
@@ -110,8 +64,5 @@ class KuchniaLidla:
 
 def get_recipe_informations(page_url, units):
     page_content = open_page(page_url)
-    if 'kwestiasmaku' in page_url:
-        recipe = KwestiaSmaku(page_content, units)
-    elif 'kuchnialidla' in page_url:
-        recipe = KuchniaLidla(page_content)
+    recipe = KuchniaLidla(page_content)
     return recipe.get_recipe_name(), '\n'.join(recipe.get_recipe_ingredients()), recipe.get_recipe_instructions()
