@@ -43,6 +43,7 @@
             <td>
                 <button class="btn btn-outline-secondary add-to-shopping-list" data-product="{{ item.product.id }}">dodaj do listy zakupów</button>
             </td>
+            <td style="color: green" id="to_shopping_list{{ item.product.id }}"></td>
         </tr>
         {% endfor %}
     </table>

@@ -15,6 +15,7 @@
         <td>
             <button class="btn btn-outline-secondary add-to-shopping-list" data-product="{{ product.ingredient.id }}">dodaj do listy zakupów</button>
         </td>
+        <td style="color: green" id="to_shopping_list{{ product.ingredient.id }}"></td>
     </tr>
     {% endfor %}
 </table>

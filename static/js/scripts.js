@@ -69,7 +69,7 @@ function addToShoppingList(productId) {
         url: "add_to_shopping_list",
         data: {product_id: productId},
         success: function (data) {
-            alert(data);
+            $("#to_shopping_list" + productId).html(data);
         }
     });
 }

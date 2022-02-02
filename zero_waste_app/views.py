@@ -176,7 +176,7 @@ def add_product_to_shopping_list(request):
         product_id = request.GET['product_id']
         product_object = Product.objects.get(pk=product_id)
         add_to_shopping_list(request, product_object)
-    return JsonResponse("Produkt dodany do listy zakupów", safe=False)
+    return JsonResponse("Dodano do listy zakupów", safe=False)
 
 
 def add_recipe(request):
